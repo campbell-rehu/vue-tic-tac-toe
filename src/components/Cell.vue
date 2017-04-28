@@ -18,6 +18,9 @@
                     this.frozen = true;
                     Event.$emit('strike', this.name);
                 }
+            },
+            created() {
+                Event.$on('freeze', () => this.frozen = true;);
             }
         }
     }
