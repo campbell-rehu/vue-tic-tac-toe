@@ -1,4 +1,7 @@
 <template>
+    <div class="gameStatus" :class="gameStatusColor">
+        {{gameStatusMessage}}
+    </div>
     <table>
         <tr>
             <cell name="1"></cell>
@@ -61,6 +64,68 @@
 
                     this.changePlayer();
                 });
+            },
+            changePlayer() {
+                this.activePlayer = this.nonActivePlayer;
+            },
+            changeGameStatus() {
+                if (this.checkForWin()) {
+                    return this.gameIsWon();
+                } else if (this.moves === 9) {
+                    return 'draw';
+                } else {
+                    return 'turn';
+                }
+            },
+            checkForWin() {
+                for (let i = 0; i < this.winConditions.length; i++) {
+                    let wc = this.winConditions[i];
+                    let cells = this.cells;
+
+                    if (this.areEqual(cells[wc[0]], cells[wc[1]], cells[wc[2]])) {
+                        return true;
+                    }
+
+                    return false;
+                }
+            },
+            areEqual() {
+                var len = arguments.length;
+
+                for (var i = 0; i < len; i++) {
+                    if (arguments[i] === '' || arguments[i] !== arguments[i-1]) {
+                        return false;
+                    }
+
+                    return true;
+                }
+            },
+            gameIsWon() {
+                Event.$emit('win', this.activePlayer);
+
+                this.gameStatusMessage = `${this.activePlayer} Wins!`;
+
+                Event.$emit('freeze');
+
+                return 'win';
+            }
+        },
+        watch: {
+            gameStatus() {
+                if (this.gameStatus === 'win') {
+                    this.gameStatusColor = 'statusWin';
+
+                    this.gameStatusMessage = `${this.activePlayer} Wins`;
+
+                    return;
+                } else if (this.gameStatus === 'draw') {
+                    this.gameStatusColor = 'statusDraw';
+
+                    this.gameStatusMessage = 'Draw';
+                    return;
+                }
+
+                this.gameStatusMessage = `${this.activePlayer}'s turn`;
             }
         }
     }
