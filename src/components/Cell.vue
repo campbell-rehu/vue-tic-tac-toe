@@ -4,6 +4,7 @@
 
 <script>
     export default {
+        props: ['name'],
         data () {
             return {
                 frozen: false,
