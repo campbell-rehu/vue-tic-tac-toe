@@ -1,39 +1,39 @@
 <template>
-    <div class="gameStatus" :class="gameStatusColor">
-        {{gameStatusMessage}}
-    </div>
     <table>
+        <div class="gameStatus" :class="gameStatusColor">
+            {{gameStatusMessage}}
+        </div>
         <tr>
-            <cell name="1"></cell>
-            <cell name="2"></cell>
-            <cell name="3"></cell>
+            <cell name="1" v-on:strike="handleStrike"></cell>
+            <cell name="2" v-on:strike="handleStrike"></cell>
+            <cell name="3" v-on:strike="handleStrike"></cell>
         </tr>
         <tr>
-            <cell name="4"></cell>
-            <cell name="5"></cell>
-            <cell name="6"></cell>
+            <cell name="4" v-on:strike="handleStrike"></cell>
+            <cell name="5" v-on:strike="handleStrike"></cell>
+            <cell name="6" v-on:strike="handleStrike"></cell>
         </tr>
         <tr>
-            <cell name="7"></cell>
-            <cell name="8"></cell>
-            <cell name="9"></cell>
+            <cell name="7" v-on:strike="handleStrike"></cell>
+            <cell name="8" v-on:strike="handleStrike"></cell>
+            <cell name="9" v-on:strike="handleStrike"></cell>
         </tr>
     </table>
 </template>
 
 <script>
+    import Cell from './Cell.vue';
     export default {
-        props: [
-            computed:{
-                nonActivePlayer () {
-                    if (this.activePlayer === 'O') {
-                        return 'X';
-                    } 
-                    return 'O';
-                }
+        name: 'Board',
+        components: {cell: Cell},
+        computed: {
+            nonActivePlayer () {
+                if (this.activePlayer === 'O') {
+                    return 'X';
+                } 
+                return 'O';
             }
-
-        }],
+        },
         data () {
             return {
                 activePlayer: 'O',
@@ -56,6 +56,7 @@
         methods: {
             created() {
                 Event.$on('strike', (cellNumber) => {
+                    console.log('hi');
                     this.cells[cellNumber] = this.activePlayer;
 
                     this.moves++;
@@ -64,6 +65,15 @@
 
                     this.changePlayer();
                 });
+            },
+            handleStrike(cellNumber) {
+                this.cells[cellNumber] = this.activePlayer;
+
+                this.moves++;
+
+                this.gameStatus = this.changeGameStatus();
+
+                this.changePlayer();
             },
             changePlayer() {
                 this.activePlayer = this.nonActivePlayer;

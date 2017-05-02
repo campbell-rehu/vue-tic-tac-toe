@@ -2,13 +2,21 @@
   <div id="app">
     <div id="details">
       <h1>Tic Tac Toe</h1>
+      <board></board>
+      <div class="scoreboard" v-on:win="win">
+        <span>O has {{wins.O}} wins</span>
+        <h2>Score Board</h2>
+        <span>X has {{wins.X}} wins</span>        
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+import Board from './components/Board.vue';
 export default {
   name: 'app',
+  components: {board: Board},
   data () {
     return {
       matches: 0,
@@ -16,6 +24,14 @@ export default {
         O: 0,
         X: 0
       }
+    }
+  },
+  methods: {
+    created() {
+      Event.$on('win', winner => this.wins[winner]++);
+    },
+    win(winner) {
+      this.wins[winner]++;
     }
   }
 }

@@ -1,9 +1,10 @@
 <template>
-    <td class="cell" @click="strike">{{mark}}</td>
+    <td class="cell" v-on:click="strike">{{mark}}</td>
 </template>
 
 <script>
     export default {
+        name: 'Cell',
         props: ['name'],
         data () {
             return {
@@ -16,11 +17,11 @@
                 if (!this.frozen) {
                     this.mark = this.$parent.activePlayer;
                     this.frozen = true;
-                    Event.$emit('strike', this.name);
+                    this.$emit('strike', this.name);
                 }
             },
             created() {
-                Event.$on('freeze', () => this.frozen = true;);
+                Event.$on('freeze', () => this.frozen = true);
             }
         }
     }
